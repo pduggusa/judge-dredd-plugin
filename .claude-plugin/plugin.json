@@ -1,0 +1,12 @@
+{
+  "name": "judge-dredd",
+  "description": "Operational discipline framework for AI-assisted development. Deployment gates, epistemic humility enforcement, Docker hygiene, and completion verification. Born from $39.5K in mistakes so you don't have to make them.",
+  "author": {
+    "name": "DugganUSA",
+    "email": "security@dugganusa.com",
+    "url": "https://www.dugganusa.com"
+  },
+  "homepage": "https://github.com/dugganusa/judge-dredd-plugin",
+  "license": "MIT",
+  "keywords": ["security", "compliance", "deployment", "devops", "guardrails"]
+}

@@ -1,0 +1,40 @@
+{
+  "confirmation_word": "adoy",
+  "epistemic_cap": 95,
+  "deployment_patterns": [
+    "build-and-push",
+    "docker push",
+    "docker build",
+    "git push",
+    "az containerapp update",
+    "aws ecs update",
+    "kubectl apply",
+    "helm install",
+    "helm upgrade",
+    "terraform apply",
+    "pulumi up"
+  ],
+  "docker": {
+    "ban_latest_tag": true,
+    "ban_alpine": true,
+    "require_platform_flag": true,
+    "allowed_bases": ["slim", "bookworm", "bullseye", "jammy", "noble"]
+  },
+  "epistemic_patterns": [
+    "100% secure",
+    "100% compliant",
+    "100% accurate",
+    "100% complete",
+    "fully secure",
+    "zero vulnerabilities",
+    "no vulnerabilities",
+    "completely safe",
+    "guaranteed secure",
+    "perfect security",
+    "no risk",
+    "zero risk"
+  ],
+  "completion_verify": true,
+  "audit_log": false,
+  "audit_log_path": ".dredd/audit.jsonl"
+}
