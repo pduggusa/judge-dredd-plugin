@@ -8,6 +8,8 @@ Falls back to sensible defaults if no config exists.
 import json
 import os
 
+VERSION = "1.1.0"
+
 DEFAULT_CONFIG = {
     "confirmation_word": "adoy",
     "epistemic_cap": 95,
@@ -17,12 +19,21 @@ DEFAULT_CONFIG = {
         "docker build",
         "git push",
         "az containerapp update",
+        "az webapp deploy",
         "aws ecs update",
+        "aws s3 sync",
         "kubectl apply",
         "helm install",
         "helm upgrade",
         "terraform apply",
         "pulumi up",
+        "npm publish",
+        "fly deploy",
+        "railway up",
+        "vercel deploy",
+        "netlify deploy",
+        "gcloud run deploy",
+        "gcloud app deploy",
     ],
     "docker": {
         "ban_latest_tag": True,
@@ -44,6 +55,19 @@ DEFAULT_CONFIG = {
         "no risk",
         "zero risk",
     ],
+    "content_workflow": {
+        "enabled": True,
+        "social_patterns": [
+            "post-to-bluesky",
+            "bsky-engage",
+            "tweet",
+            "toot",
+            "post-to-twitter",
+            "post-to-mastodon",
+            "post-to-linkedin",
+            "social-post",
+        ],
+    },
     "completion_verify": True,
     "audit_log": False,
     "audit_log_path": ".dredd/audit.jsonl",
@@ -52,7 +76,7 @@ DEFAULT_CONFIG = {
 
 def load_config():
     """Load .dredd.json from project root, merge with defaults."""
-    config = DEFAULT_CONFIG.copy()
+    config = _deep_copy(DEFAULT_CONFIG)
 
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
     config_path = os.path.join(project_dir, ".dredd.json")
@@ -61,16 +85,46 @@ def load_config():
         try:
             with open(config_path, "r") as f:
                 user_config = json.load(f)
-            # Shallow merge - user overrides defaults
-            for key, value in user_config.items():
-                if isinstance(value, dict) and isinstance(config.get(key), dict):
-                    config[key].update(value)
-                else:
-                    config[key] = value
+            _merge_config(config, user_config)
         except (json.JSONDecodeError, IOError):
             pass  # Bad config = use defaults. Don't break the workflow.
 
     return config
+
+
+def _deep_copy(obj):
+    """Deep copy dicts and lists without importing copy."""
+    if isinstance(obj, dict):
+        return {k: _deep_copy(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_deep_copy(v) for v in obj]
+    return obj
+
+
+def _merge_config(base, override):
+    """
+    Merge user config into base config.
+
+    Arrays: replaced by user values (use additional_* to extend defaults).
+    Dicts: recursively merged.
+    Scalars: overridden.
+
+    Special: additional_deployment_patterns and additional_epistemic_patterns
+    extend the default arrays instead of replacing them.
+    """
+    for key, value in override.items():
+        # Handle additional_* fields that extend default arrays
+        if key == "additional_deployment_patterns" and isinstance(value, list):
+            base.setdefault("deployment_patterns", []).extend(value)
+        elif key == "additional_epistemic_patterns" and isinstance(value, list):
+            base.setdefault("epistemic_patterns", []).extend(value)
+        elif key == "additional_social_patterns" and isinstance(value, list):
+            wf = base.setdefault("content_workflow", {})
+            wf.setdefault("social_patterns", []).extend(value)
+        elif isinstance(value, dict) and isinstance(base.get(key), dict):
+            _merge_config(base[key], value)
+        else:
+            base[key] = value
 
 
 def audit_log(event_type, details, config=None):
@@ -81,7 +135,7 @@ def audit_log(event_type, details, config=None):
     if not config.get("audit_log", False):
         return
 
-    import datetime
+    from datetime import datetime, timezone
 
     log_path = os.path.join(
         os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd()),
@@ -91,9 +145,10 @@ def audit_log(event_type, details, config=None):
     try:
         os.makedirs(os.path.dirname(log_path), exist_ok=True)
         entry = {
-            "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "event": event_type,
             "details": details,
+            "version": VERSION,
         }
         with open(log_path, "a") as f:
             f.write(json.dumps(entry) + "\n")

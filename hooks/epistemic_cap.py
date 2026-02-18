@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Judge Dredd - Epistemic Humility Hook
-PreToolUse(Edit|Write|MultiEdit)
+PreToolUse(Edit|Write|MultiEdit|NotebookEdit)
 
 Catches claims of 100% perfection, compliance, or certainty in code and content.
 We guarantee 5% bullshit exists. This is honest. Claiming 100% is either lying or ignorance.
@@ -9,6 +9,7 @@ We guarantee 5% bullshit exists. This is honest. Claiming 100% is either lying o
 Configurable via .dredd.json:
   - epistemic_cap: maximum allowed percentage (default: 95)
   - epistemic_patterns: list of phrases to catch
+  - additional_epistemic_patterns: list of extra patterns to add to defaults
 
 O'Toole's Axiom: Murphy was an optimist. Something WILL be wrong.
 """
@@ -28,6 +29,8 @@ def extract_content(tool_name, tool_input):
     elif tool_name == "MultiEdit":
         edits = tool_input.get("edits", [])
         return " ".join(edit.get("new_string", "") for edit in edits)
+    elif tool_name == "NotebookEdit":
+        return tool_input.get("new_source", "")
     return ""
 
 
@@ -41,7 +44,7 @@ def main():
     tool_name = input_data.get("tool_name", "")
     tool_input = input_data.get("tool_input", {})
 
-    if tool_name not in ("Edit", "Write", "MultiEdit"):
+    if tool_name not in ("Edit", "Write", "MultiEdit", "NotebookEdit"):
         sys.exit(0)
 
     content = extract_content(tool_name, tool_input)
@@ -65,7 +68,6 @@ def main():
 
     file_path = tool_input.get("file_path", "unknown")
 
-    # Log the violation
     audit_log(
         "epistemic_cap_violation",
         {
@@ -76,15 +78,22 @@ def main():
         config,
     )
 
-    # Warn but don't block — the human decides
-    print(
-        f"Judge Dredd Epistemic Cap: Found \"{matched_pattern}\" in {file_path}. "
-        f"The {cap}% cap is enforced — we guarantee {100 - cap}% bullshit exists in any "
-        f"complex system. Claiming otherwise is either lying or ignorance. "
-        f"Consider rephrasing.",
-        file=sys.stderr,
-    )
-    sys.exit(2)  # Block and show warning
+    # Ask, don't block — sometimes "100%" is legitimate in code logic
+    result = {
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "ask",
+            "permissionDecisionReason": (
+                f'EPISTEMIC CAP: Found "{matched_pattern}" in {file_path}. '
+                f"The {cap}% cap is enforced \u2014 we guarantee {100 - cap}% bullshit "
+                f"exists in any complex system. Claiming otherwise is either lying or "
+                f"ignorance. If this is a legitimate use (code logic, not a claim), proceed. "
+                f"Otherwise, rephrase."
+            ),
+        }
+    }
+
+    print(json.dumps(result))
 
 
 if __name__ == "__main__":

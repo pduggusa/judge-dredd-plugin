@@ -7,12 +7,24 @@
     "docker build",
     "git push",
     "az containerapp update",
+    "az webapp deploy",
     "aws ecs update",
+    "aws s3 sync",
     "kubectl apply",
     "helm install",
     "helm upgrade",
     "terraform apply",
-    "pulumi up"
+    "pulumi up",
+    "npm publish",
+    "fly deploy",
+    "railway up",
+    "vercel deploy",
+    "netlify deploy",
+    "gcloud run deploy",
+    "gcloud app deploy"
+  ],
+  "additional_deployment_patterns": [
+    "my-custom-deploy-script"
   ],
   "docker": {
     "ban_latest_tag": true,
@@ -33,6 +45,26 @@
     "perfect security",
     "no risk",
     "zero risk"
+  ],
+  "additional_epistemic_patterns": [
+    "bulletproof",
+    "foolproof"
+  ],
+  "content_workflow": {
+    "enabled": true,
+    "social_patterns": [
+      "post-to-bluesky",
+      "bsky-engage",
+      "tweet",
+      "toot",
+      "post-to-twitter",
+      "post-to-mastodon",
+      "post-to-linkedin",
+      "social-post"
+    ]
+  },
+  "additional_social_patterns": [
+    "my-social-tool"
   ],
   "completion_verify": true,
   "audit_log": false,

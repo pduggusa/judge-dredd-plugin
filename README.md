@@ -1,6 +1,6 @@
 # Judge Dredd
 
-**Operational discipline framework for Claude Code.**
+**Operational discipline framework for Claude Code.** v1.1.0
 
 Born from $39.5K in deployment mistakes, 7-hour regressions, and 34 false positives at [DugganUSA](https://www.dugganusa.com). Every rule in this plugin exists because someone (me) did the wrong thing and documented the cost.
 
@@ -10,10 +10,12 @@ Judge Dredd enforces operational discipline through Claude Code hooks:
 
 | Hook | Trigger | What It Catches |
 |------|---------|-----------------|
-| **Deployment Gate** | `PreToolUse(Bash)` | `docker push`, `git push`, `terraform apply`, etc. Forces confirmation before any deployment command executes. |
-| **Epistemic Cap** | `PreToolUse(Edit\|Write)` | "100% secure", "zero vulnerabilities", "fully compliant". Enforces a 95% ceiling on certainty claims. |
-| **Docker Hygiene** | `PreToolUse(Bash)` | `:latest` tags, Alpine base images, missing `--platform` flags. Catches the build mistakes that waste hours in production. |
-| **Completion Verify** | `Stop` | Agent tries to stop without verifying changes. Forces a "did you actually test this?" check before closing out. |
+| **Deployment Gate** | `PreToolUse(Bash)` | `docker push`, `git push`, `terraform apply`, `npm publish`, `vercel deploy`, etc. Forces confirmation before any deployment command executes. |
+| **Epistemic Cap** | `PreToolUse(Edit\|Write\|MultiEdit\|NotebookEdit)` | "100% secure", "zero vulnerabilities", "fully compliant". Enforces a 95% ceiling on certainty claims. |
+| **Docker Hygiene** | `PreToolUse(Bash\|Edit\|Write\|MultiEdit\|NotebookEdit)` | `:latest` tags, Alpine base images, missing `--platform` flags — in commands AND Dockerfiles. |
+| **Content Workflow** | `PreToolUse(Bash)` | Social posting without backing content. The "Ass-Backwards Pattern": posting to Bluesky before the blog post exists. |
+| **Context Preservation** | `SessionStart(compact)` | Context loss after compaction. Re-injects your project identity, APIs, and rules from `.dredd/context.md`. |
+| **Completion Verify** | `Stop` | Agent tries to stop without verifying changes. Prompts a "did you actually test this?" self-check before closing out. |
 
 Plus two slash commands:
 
@@ -51,17 +53,28 @@ Drop a `.dredd.json` in your project root to customize. All fields are optional 
     "terraform apply",
     "kubectl apply"
   ],
+  "additional_deployment_patterns": [
+    "my-custom-deploy-script"
+  ],
   "docker": {
     "ban_latest_tag": true,
     "ban_alpine": true,
     "require_platform_flag": true
   },
+  "content_workflow": {
+    "enabled": true,
+    "social_patterns": [
+      "post-to-bluesky",
+      "tweet"
+    ]
+  },
+  "additional_social_patterns": [
+    "my-social-tool"
+  ],
   "completion_verify": true,
   "audit_log": false
 }
 ```
-
-See [`.dredd.example.json`](.dredd.example.json) for the full configuration reference.
 
 ### Configuration Reference
 
@@ -69,13 +82,53 @@ See [`.dredd.example.json`](.dredd.example.json) for the full configuration refe
 |-------|------|---------|-------------|
 | `confirmation_word` | string | `"adoy"` | The word that unlocks deployment. Pick your own. |
 | `epistemic_cap` | number | `95` | Maximum percentage allowed in certainty claims. |
-| `deployment_patterns` | string[] | See example | Command substrings that trigger the deployment gate. |
-| `docker.ban_latest_tag` | bool | `true` | Block `:latest` tags. Use git hashes or timestamps. |
-| `docker.ban_alpine` | bool | `true` | Block Alpine base images. musl != glibc. |
+| `deployment_patterns` | string[] | See below | Command substrings that trigger the deployment gate. **Replaces** defaults. |
+| `additional_deployment_patterns` | string[] | `[]` | Extra patterns **added to** the defaults. Use this to extend without replacing. |
+| `docker.ban_latest_tag` | bool | `true` | Block `:latest` tags in commands AND Dockerfiles. |
+| `docker.ban_alpine` | bool | `true` | Block Alpine base images in commands AND Dockerfiles. |
 | `docker.require_platform_flag` | bool | `true` | Require `--platform` on `docker build`. |
-| `epistemic_patterns` | string[] | See example | Phrases that violate the epistemic cap. |
+| `epistemic_patterns` | string[] | See below | Phrases that violate the epistemic cap. **Replaces** defaults. |
+| `additional_epistemic_patterns` | string[] | `[]` | Extra patterns **added to** the defaults. |
+| `content_workflow.enabled` | bool | `true` | Enable the content workflow check. |
+| `content_workflow.social_patterns` | string[] | See below | Command substrings that indicate social posting. |
+| `additional_social_patterns` | string[] | `[]` | Extra social patterns **added to** the defaults. |
 | `completion_verify` | bool | `true` | Require verification before agent stops. |
 | `audit_log` | bool | `false` | Log all gate triggers to `.dredd/audit.jsonl`. |
+
+### Default Deployment Patterns
+
+`build-and-push`, `docker push`, `docker build`, `git push`, `az containerapp update`, `az webapp deploy`, `aws ecs update`, `aws s3 sync`, `kubectl apply`, `helm install`, `helm upgrade`, `terraform apply`, `pulumi up`, `npm publish`, `fly deploy`, `railway up`, `vercel deploy`, `netlify deploy`, `gcloud run deploy`, `gcloud app deploy`
+
+### Default Social Patterns
+
+`post-to-bluesky`, `bsky-engage`, `tweet`, `toot`, `post-to-twitter`, `post-to-mastodon`, `post-to-linkedin`, `social-post`
+
+## Context Preservation
+
+After context compaction, Claude loses operational knowledge — it remembers WHAT happened but forgets WHO you are and HOW you work.
+
+Create `.dredd/context.md` in your project root:
+
+```markdown
+## Team Context
+
+You are working with the Acme Corp engineering team.
+
+### Rules
+- Never deploy to production on Fridays
+- All PRs require 2 approvals
+- Use PostgreSQL, not MySQL
+
+### APIs
+- Production: https://api.acme.com
+- Staging: https://staging-api.acme.com
+
+### Key People
+- Alice (Tech Lead): alice@acme.com
+- Bob (DevOps): bob@acme.com
+```
+
+Judge Dredd re-injects this context after every compaction event. No more "who am I?" amnesia.
 
 ## The 6D Framework
 
@@ -115,7 +168,19 @@ O'Toole's Axiom: Murphy was an optimist. Something WILL be wrong. When your comp
 - Alpine uses musl libc. Your Node.js native modules, DNS resolution, and timezone handling will break in production. Use Debian slim.
 - Mac builds ARM64. Production runs AMD64. Forget `--platform linux/amd64` once, debug it for hours.
 
-### Law #4: Verify Before Victory
+Now enforced in both CLI commands and Dockerfile writes.
+
+### Law #4: Content Before Promotion
+**Publish before you promote.**
+
+The workflow is Research → Publish → Promote. Social posts without backing content are noise. The hook catches social posting commands and asks: "Is there published content backing this?"
+
+### Law #5: Preserve Context
+**Re-inject identity after compaction.**
+
+The summary preserves WHAT happened, not WHO you are. After compaction, your project's rules, APIs, and team identity evaporate. Context preservation fixes this automatically.
+
+### Law #6: Verify Before Victory
 **Check results BEFORE documenting success.**
 
 The agent should never say "done" without confirming the health check passed, the deploy succeeded, and the changes are live. This prevented a 7-hour regression (Issue #113).

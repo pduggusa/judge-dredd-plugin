@@ -1,13 +1,23 @@
 #!/usr/bin/env python3
 """
-Judge Dredd - Completion Verification Hook
+Judge Dredd - Completion Verification Hook (Command-based alternative)
 Stop
 
-Before the agent stops, verify that changes were actually tested and confirmed.
-Law #12: Check results BEFORE documenting success.
+NOTE: The default hooks.json now uses a prompt-based Stop hook instead of this
+command-based version. The prompt approach lets the model self-assess rather than
+unconditionally blocking, which is less annoying and more effective in practice.
 
-This hook runs as a Stop event — it fires when the agent is about to end its turn.
-It outputs a prompt that asks the model to self-verify before closing out.
+To use this command-based version instead, replace the Stop hook in hooks.json:
+
+  "Stop": [{
+    "hooks": [{
+      "type": "command",
+      "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/completion_verify.py",
+      "timeout": 5
+    }]
+  }]
+
+Law #12: Check results BEFORE documenting success.
 """
 
 import json
