@@ -2,6 +2,15 @@
 
 All notable changes to Judge Dredd will be documented in this file.
 
+## [1.2.0] - 2026-06-27
+
+### Added
+- **Version field in `plugin.json`** (`1.2.0`) so the manifest version tracks the README and CHANGELOG.
+- **Provenance block in the README.** Surfaced the live platform the discipline framework grew out of: 1.10M+ IOCs across ~17.9M documents / 44 indexes, 275+ STIX consumers in 46 countries, 15 external feed sources, and the three independent feed-validation endpoints (novelty / timeliness ~31 days ahead of CISA KEV / accuracy).
+
+### Changed
+- README header bumped to **v1.2.0**.
+
 ## [1.1.0] - 2026-02-17
 
 ### Added
