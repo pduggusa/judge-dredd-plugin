@@ -2,6 +2,15 @@
 
 All notable changes to Judge Dredd will be documented in this file.
 
+## [1.2.2] - 2026-09-29
+
+### Security
+- **A repo-local `.dredd.json` can now only tighten the gate, never loosen it.** Previously an untrusted cloned repo could ship `{"deployment_patterns": []}` or disable enforcement flags and silently disarm the gate. Pattern lists are now grow-only, `docker.allowed_bases` is shrink-only, true-by-default flags cannot be turned off, and `epistemic_cap` cannot be raised. Repo-local `audit_log_path` overrides are dropped and the resolved path is confined to the project directory, which closes an arbitrary directory-create and file-append primitive. Committed 2026-07-19; first tagged release. **Upgrade.**
+
+### Changed
+- Refreshed corpus figures from the live `/api/v1/search/stats` (1.9M+ IOCs, ~68M documents across 70 indexes).
+- Removed the retired "275+ consumers in 46 countries" line. It counted blocked, User-Agent-less scrapers as consumers, so we stopped quoting it on 2026-05-30.
+
 ## [1.2.1] - 2026-06-30
 
 ### Added

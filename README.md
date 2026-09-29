@@ -4,7 +4,7 @@
 
 Born from $39.5K in deployment mistakes, 7-hour regressions, and 34 false positives at [DugganUSA](https://www.dugganusa.com). Every rule in this plugin exists because someone (me) did the wrong thing and documented the cost.
 
-> The same team runs a threat-intel STIX feed — **1.5M+ IOCs**, **~38M documents across 65 indexes** — consumed by **275+ STIX consumers in 46 countries**, fed by **15 external feed sources**, with **~1,655 blog posts** of receipts behind it. The feed is independently validated on four live, no-auth endpoints: novelty ([feed-uniqueness](https://analytics.dugganusa.com/api/v1/feed-uniqueness)), timeliness ([kev-lead](https://analytics.dugganusa.com/api/v1/kev-lead), live kev-lead ledger vs CISA KEV), accuracy ([spamhaus-validation](https://analytics.dugganusa.com/api/v1/spamhaus-validation)), and liveness ([feed-efficacy](https://analytics.dugganusa.com/api/v1/feed-efficacy), opt-in consumer reports of when our indicators actually fire on real traffic). This plugin is the discipline layer that ops grew out of.
+> The same team runs a threat-intel STIX feed — **1.9M+ IOCs**, **~68M documents across 70 indexes** — fed by **15 external feed sources**, with **~1,655 blog posts** of receipts behind it. The feed is independently validated on four live, no-auth endpoints: novelty ([feed-uniqueness](https://analytics.dugganusa.com/api/v1/feed-uniqueness)), timeliness ([kev-lead](https://analytics.dugganusa.com/api/v1/kev-lead), live kev-lead ledger vs CISA KEV), accuracy ([spamhaus-validation](https://analytics.dugganusa.com/api/v1/spamhaus-validation)), and liveness ([feed-efficacy](https://analytics.dugganusa.com/api/v1/feed-efficacy), opt-in consumer reports of when our indicators actually fire on real traffic). This plugin is the discipline layer that ops grew out of.
 
 ## What It Does
 
@@ -207,7 +207,7 @@ This plugin encodes three beliefs:
 
 ## Origin
 
-Built by [Patrick Duggan](https://www.linkedin.com/in/patrickdugganusa/) at [DugganUSA LLC](https://www.dugganusa.com). The same team running a threat intelligence STIX feed consumed by 275+ organizations across 46 countries on $76/month in Azure credits.
+Built by [Patrick Duggan](https://www.linkedin.com/in/patrickdugganusa/) at [DugganUSA LLC](https://www.dugganusa.com). The same team runs the DugganUSA threat intelligence STIX feed.
 
 The Judge Dredd framework was originally built to govern our own AI-assisted security operations. After it prevented enough disasters, we decided other people should have access to it too.
 
