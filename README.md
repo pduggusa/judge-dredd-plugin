@@ -1,10 +1,14 @@
 # Judge Dredd
 
+**You do you. I do me. We share contexts.**
+
+Claude Code keeps its context; this plugin shares ours: the deployment gates and honesty rules we learned the expensive way.
+
 **Operational discipline framework for Claude Code.** v1.2.1
 
 Born from $39.5K in deployment mistakes, 7-hour regressions, and 34 false positives at [DugganUSA](https://www.dugganusa.com). Every rule in this plugin exists because someone (me) did the wrong thing and documented the cost.
 
-> The same team runs a threat-intel STIX feed — **1.9M+ IOCs**, **~68M documents across 70 indexes** — fed by **15 external feed sources**, with **~1,655 blog posts** of receipts behind it. The feed is independently validated on four live, no-auth endpoints: novelty ([feed-uniqueness](https://analytics.dugganusa.com/api/v1/feed-uniqueness)), timeliness ([kev-lead](https://analytics.dugganusa.com/api/v1/kev-lead), live kev-lead ledger vs CISA KEV), accuracy ([spamhaus-validation](https://analytics.dugganusa.com/api/v1/spamhaus-validation)), and liveness ([feed-efficacy](https://analytics.dugganusa.com/api/v1/feed-efficacy), opt-in consumer reports of when our indicators actually fire on real traffic). This plugin is the discipline layer that ops grew out of.
+> The same team runs the **DugganUSA Feed**, a threat-intel STIX feed ([live counts](https://analytics.dugganusa.com/api/v1/search/stats)), with the research posts at [www.dugganusa.com](https://www.dugganusa.com) as its receipts. The feed is independently validated on four live, no-auth endpoints: novelty ([feed-uniqueness](https://analytics.dugganusa.com/api/v1/feed-uniqueness)), timeliness ([kev-lead](https://analytics.dugganusa.com/api/v1/kev-lead), live kev-lead ledger vs CISA KEV), accuracy ([spamhaus-validation](https://analytics.dugganusa.com/api/v1/spamhaus-validation)), and liveness ([feed-efficacy](https://analytics.dugganusa.com/api/v1/feed-efficacy), opt-in consumer reports of when our indicators actually fire on real traffic). This plugin is the discipline layer that ops grew out of.
 
 ## What It Does
 
@@ -207,7 +211,7 @@ This plugin encodes three beliefs:
 
 ## Origin
 
-Built by [Patrick Duggan](https://www.linkedin.com/in/patrickdugganusa/) at [DugganUSA LLC](https://www.dugganusa.com). The same team runs the DugganUSA threat intelligence STIX feed.
+Built by [Patrick Duggan](https://www.linkedin.com/in/patrickdugganmn/) at [DugganUSA LLC](https://www.dugganusa.com). The same team runs the DugganUSA Feed. Contact: help@dugganusa.com.
 
 The Judge Dredd framework was originally built to govern our own AI-assisted security operations. After it prevented enough disasters, we decided other people should have access to it too.
 
