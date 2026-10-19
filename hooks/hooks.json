@@ -8,7 +8,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/context_preservation.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/context_preservation.py\"",
             "timeout": 5
           }
         ]
@@ -20,17 +20,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/deployment_gate.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/deployment_gate.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/docker_hygiene.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/docker_hygiene.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/content_workflow.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/content_workflow.py\"",
             "timeout": 5
           }
         ]
@@ -40,12 +40,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/epistemic_cap.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/epistemic_cap.py\"",
             "timeout": 5
           },
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/hooks/docker_hygiene.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/docker_hygiene.py\"",
             "timeout": 5
           }
         ]
