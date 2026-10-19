@@ -1,0 +1,15 @@
+{
+  "name": "judge-dredd-plugin",
+  "owner": {
+    "name": "DugganUSA",
+    "email": "security@dugganusa.com"
+  },
+  "plugins": [
+    {
+      "name": "judge-dredd",
+      "source": "./",
+      "description": "Operational discipline framework for AI-assisted development. Deployment gates, epistemic humility enforcement, Docker hygiene, and completion verification. Born from $39.5K in mistakes so you don't have to make them.",
+      "version": "1.2.2"
+    }
+  ]
+}

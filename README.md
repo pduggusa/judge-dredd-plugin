@@ -34,15 +34,10 @@ Plus two slash commands:
 
 ```bash
 # Add the marketplace
-/plugin marketplace add dugganusa/judge-dredd-plugin
+/plugin marketplace add pduggusa/judge-dredd-plugin
 
 # Install the plugin
-/plugin install judge-dredd@dugganusa
-```
-
-Or install directly:
-```bash
-/plugin install judge-dredd@dugganusa/judge-dredd-plugin
+/plugin install judge-dredd@judge-dredd-plugin
 ```
 
 ## Configure
@@ -160,7 +155,7 @@ These are non-negotiable. They exist because violating them cost real money.
 
 The agent will fix code, test locally, and report "awaiting confirmation." Then it waits. The human says the confirmation word. Then — and only then — it deploys.
 
-This pattern prevented 4 unauthorized deployments that would have cost $18.5K-$39.5K in cumulative damage.
+This pattern exists because 4 unauthorized deployments cost us $18.5K-$39.5K in cumulative damage before it did.
 
 ### Law #2: The Epistemic Cap
 **Never claim 100% of anything.**

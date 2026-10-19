@@ -7,7 +7,7 @@
     "email": "security@dugganusa.com",
     "url": "https://www.dugganusa.com"
   },
-  "homepage": "https://github.com/dugganusa/judge-dredd-plugin",
+  "homepage": "https://github.com/pduggusa/judge-dredd-plugin",
   "license": "MIT",
   "keywords": ["security", "compliance", "deployment", "devops", "guardrails"]
 }
