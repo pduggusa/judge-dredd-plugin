@@ -1,5 +1,7 @@
 # Judge Dredd
 
+**Docs:** https://docs.dugganusa.com/agents/dredd/
+
 **You do you. I do me. We share contexts.**
 
 Claude Code keeps its context; this plugin shares ours: the deployment gates and honesty rules we learned the expensive way.
