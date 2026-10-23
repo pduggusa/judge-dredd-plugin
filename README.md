@@ -8,7 +8,7 @@ Claude Code keeps its context; this plugin shares ours: the deployment gates and
 
 Born from $39.5K in deployment mistakes, 7-hour regressions, and 34 false positives at [DugganUSA](https://www.dugganusa.com). Every rule in this plugin exists because someone (me) did the wrong thing and documented the cost.
 
-> The same team runs the **DugganUSA Feed**, a threat-intel STIX feed ([live counts](https://analytics.dugganusa.com/api/v1/search/stats)), with the research posts at [www.dugganusa.com](https://www.dugganusa.com) as its receipts. The feed is independently validated on four live, no-auth endpoints: novelty ([feed-uniqueness](https://analytics.dugganusa.com/api/v1/feed-uniqueness)), timeliness ([kev-lead](https://analytics.dugganusa.com/api/v1/kev-lead), live kev-lead ledger vs CISA KEV), accuracy ([spamhaus-validation](https://analytics.dugganusa.com/api/v1/spamhaus-validation)), and liveness ([feed-efficacy](https://analytics.dugganusa.com/api/v1/feed-efficacy), opt-in consumer reports of when our indicators actually fire on real traffic). This plugin is the discipline layer that ops grew out of.
+> The same team runs the **DugganUSA Feed**, a threat-intel STIX feed ([live counts](https://analytics.dugganusa.com/api/v1/search/stats)), with the research posts at [www.dugganusa.com](https://www.dugganusa.com) as its receipts. The feed is independently validated on four live, no-auth endpoints: novelty ([feed-uniqueness](https://analytics.dugganusa.com/api/v1/feed-uniqueness)), timeliness ([kev-lead](https://analytics.dugganusa.com/api/v1/kev-lead), a live ledger of when each exploited CVE entered our corpus next to its CISA KEV date), accuracy ([spamhaus-validation](https://analytics.dugganusa.com/api/v1/spamhaus-validation)), and liveness ([feed-efficacy](https://analytics.dugganusa.com/api/v1/feed-efficacy), opt-in consumer reports of when our indicators actually fire on real traffic). This plugin is the discipline layer that ops grew out of.
 
 ## What It Does
 
@@ -166,7 +166,7 @@ O'Toole's Axiom: Murphy was an optimist. Something WILL be wrong. When your comp
 **No `:latest`. No Alpine. Always specify platform.**
 
 - `:latest` is not a version. It's a prayer. Tag with git hashes.
-- Alpine uses musl libc. Your Node.js native modules, DNS resolution, and timezone handling will break in production. Use Debian slim.
+- Alpine uses musl libc, which can trip up Node.js native modules, DNS resolution, and timezone handling. We use Debian slim.
 - Mac builds ARM64. Production runs AMD64. Forget `--platform linux/amd64` once, debug it for hours.
 
 Now enforced in both CLI commands and Dockerfile writes.
